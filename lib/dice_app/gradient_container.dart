@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_app/dice_app/dice_roller.dart';
 
 // We can declare constants outside the class
 const Alignment startAlignment = Alignment.topCenter;
@@ -19,11 +20,8 @@ class GradientContainer extends StatelessWidget {
           end: endAlignment,
         ),
       ),
-      child: Center(
-        child: Image.asset(
-          'assets/images/dice-4.png',
-          width: 250,
-        ),
+      child: const Center(
+        child: DiceRoller()
       ),
     );
   }
