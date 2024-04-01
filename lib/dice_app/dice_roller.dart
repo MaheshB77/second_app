@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:second_app/shared/widgets/spacing.dart';
 
 class DiceRoller extends StatefulWidget {
   const DiceRoller({super.key});
 
   @override
-  State<DiceRoller> createState() {
-    return _DiceRollerState();
-  }
+  State<DiceRoller> createState() => _DiceRollerState();
 }
 
 class _DiceRollerState extends State<DiceRoller> {
@@ -16,7 +15,6 @@ class _DiceRollerState extends State<DiceRoller> {
 
   void rollDice() {
     int nextDice = random.nextInt(6) + 1;
-    
     setState(() {
       currentDice = 'assets/images/dice-$nextDice.png';
     });
@@ -31,9 +29,7 @@ class _DiceRollerState extends State<DiceRoller> {
           currentDice,
           width: 250,
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        verticalSpace(20),
         ElevatedButton(
           onPressed: rollDice,
           style: ElevatedButton.styleFrom(
