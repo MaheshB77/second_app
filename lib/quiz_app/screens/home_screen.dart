@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:second_app/shared/widgets/spacing.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,11 +18,12 @@ class HomeScreen extends StatelessWidget {
             color: const Color.fromARGB(150, 255, 255, 255),
           ),
           verticalSpace(20),
-          const Text(
+          Text(
             'Learn Flutter the fun way!',
-            style: TextStyle(
-              fontSize: 22,
+            style: GoogleFonts.poppins(
               color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
           verticalSpace(20),

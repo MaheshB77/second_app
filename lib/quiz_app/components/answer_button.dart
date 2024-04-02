@@ -10,7 +10,10 @@ class AnswerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onTap,
-      child: Text(answer),
+      child: Text(
+        answer,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
