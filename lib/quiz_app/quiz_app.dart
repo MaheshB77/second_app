@@ -32,8 +32,7 @@ class _QuizAppState extends State<QuizApp> {
     selectedAnswers.add(answer);
     if (selectedAnswers.length == questions.length) {
       setState(() {
-        selectedAnswers = [];
-        currScreen = const ResultsScreen();
+        currScreen = ResultsScreen(selectedAnswers: selectedAnswers);
       });
     }
   }
