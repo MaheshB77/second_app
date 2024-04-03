@@ -6,7 +6,8 @@ import 'package:second_app/quiz_app/models/quiz_question.dart';
 import 'package:second_app/shared/widgets/spacing.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  const QuestionsScreen({super.key});
+  final void Function(String answer) onAddAnswer;
+  const QuestionsScreen({super.key, required this.onAddAnswer});
 
   @override
   State<QuestionsScreen> createState() => _QuestionsScreenState();
@@ -15,7 +16,8 @@ class QuestionsScreen extends StatefulWidget {
 class _QuestionsScreenState extends State<QuestionsScreen> {
   var currentQueIndex = 0;
 
-  nextQuestion() {
+  nextQuestion(String answer) {
+    widget.onAddAnswer(answer);
     setState(() {
       currentQueIndex++;
     });
@@ -35,19 +37,20 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             Text(
               currentQuestion.question,
               style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold
-              ),
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             verticalSpace(20),
             ...currentQuestion.getShuffledAnswers().map(
-              (ans) => AnswerButton(
-                answer: ans,
-                onTap: nextQuestion,
-              ),
-            ),
+                  (ans) => AnswerButton(
+                    answer: ans,
+                    onTap: () {
+                      nextQuestion(ans);
+                    },
+                  ),
+                ),
           ],
         ),
       ),
