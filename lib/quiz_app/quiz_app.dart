@@ -32,9 +32,19 @@ class _QuizAppState extends State<QuizApp> {
     selectedAnswers.add(answer);
     if (selectedAnswers.length == questions.length) {
       setState(() {
-        currScreen = ResultsScreen(selectedAnswers: selectedAnswers);
+        currScreen = ResultsScreen(
+          selectedAnswers: selectedAnswers,
+          restartQuiz: restartQuiz,
+        );
       });
     }
+  }
+
+  void restartQuiz() {
+    setState(() {
+      selectedAnswers = [];
+      currScreen = HomeScreen(switchScreen);
+    });
   }
 
   @override

@@ -7,18 +7,25 @@ import 'package:second_app/shared/widgets/spacing.dart';
 
 class ResultsScreen extends StatelessWidget {
   final List<String> selectedAnswers;
-  const ResultsScreen({super.key, required this.selectedAnswers});
+  final void Function() restartQuiz;
+  const ResultsScreen({
+    super.key,
+    required this.selectedAnswers,
+    required this.restartQuiz,
+  });
 
   List<QuestionSummary> getSummary() {
     final List<QuestionSummary> questionSummary = [];
     for (int i = 0; i < selectedAnswers.length; i++) {
-      questionSummary.add(QuestionSummary(
-        questionIndex: i,
-        question: questions[i].question,
-        correctAnswer: questions[i].answers[0],
-        userAnswer: selectedAnswers[i],
-        isCorrect: selectedAnswers[i] == questions[i].answers[0],
-      ));
+      questionSummary.add(
+        QuestionSummary(
+          questionIndex: i,
+          question: questions[i].question,
+          correctAnswer: questions[i].answers[0],
+          userAnswer: selectedAnswers[i],
+          isCorrect: selectedAnswers[i] == questions[i].answers[0],
+        ),
+      );
     }
     return questionSummary;
   }
@@ -54,9 +61,9 @@ class ResultsScreen extends StatelessWidget {
             AnswerDetails(questionSummary: getSummary()),
             verticalSpace(20),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: restartQuiz,
               icon: const Icon(Icons.refresh),
-              label: const Text ('Restart Quiz!'),
+              label: const Text('Restart Quiz!'),
             )
           ],
         ),
