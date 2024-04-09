@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: appTheme,
+      darkTheme: appDarkTheme,
       // home: const DiceApp(),
       // home: const QuizApp(),
       home: const ExpenseTracker(),
