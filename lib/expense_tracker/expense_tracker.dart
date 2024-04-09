@@ -17,10 +17,18 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (ctx) => NewExpense(
         closeExpenseOverlay: _closeExpenseOverlay,
+        addExpense: _addExpense,
       ),
     );
+  }
+
+  void _addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
   }
 
   void _closeExpenseOverlay() {

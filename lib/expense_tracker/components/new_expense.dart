@@ -3,7 +3,12 @@ import 'package:second_app/expense_tracker/models/Expense.dart';
 
 class NewExpense extends StatefulWidget {
   final void Function() closeExpenseOverlay;
-  const NewExpense({super.key, required this.closeExpenseOverlay});
+  final void Function(Expense) addExpense;
+  const NewExpense({
+    super.key,
+    required this.closeExpenseOverlay,
+    required this.addExpense,
+  });
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -35,30 +40,47 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  void _showErrorMsg() {
+  bool _isExpenseInvalid() {
     final isTitleInvalid = _titleController.text.trim().isEmpty;
     final enteredAmount = double.tryParse(_amountController.text);
     final isAmountInvalid = enteredAmount == null || enteredAmount <= 0;
     final isInvalidDate = _selectedDate == null;
-    if (isTitleInvalid || isAmountInvalid || isInvalidDate) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Invalid input'),
-          content: const Text(
-              'Please make sure to enter valid date, title, and amount'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-              },
-              child: const Text('Okay'),
-            )
-          ],
+    return (isTitleInvalid || isAmountInvalid || isInvalidDate);
+  }
+
+  void _showErrorMsg() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Invalid input'),
+        content: const Text(
+            'Please make sure to enter valid date, title, and amount'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+            },
+            child: const Text('Okay'),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _addExpense() {
+    if (_isExpenseInvalid()) {
+      _showErrorMsg();
+    } else {
+      widget.addExpense(
+        Expense(
+          title: _titleController.text,
+          amount: double.parse(_amountController.text),
+          date: _selectedDate!,
+          category: _selectedCategory!,
         ),
       );
+      Navigator.pop(context);
     }
-    return;
   }
 
   @override
@@ -71,7 +93,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(
         children: [
           TextField(
@@ -129,7 +151,7 @@ class _NewExpenseState extends State<NewExpense> {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: _showErrorMsg,
+                onPressed: _addExpense,
                 child: const Text('Save expense'),
               ),
               TextButton(
