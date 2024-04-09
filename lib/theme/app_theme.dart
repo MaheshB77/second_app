@@ -19,7 +19,13 @@ var appTheme = ThemeData().copyWith(
       backgroundColor: colorScheme.primaryContainer,
     ),
   ),
-  textTheme: GoogleFonts.robotoTextTheme(),
+  textTheme: GoogleFonts.robotoTextTheme().copyWith(
+    titleLarge: TextStyle(
+      fontWeight: FontWeight.bold,
+      color: colorScheme.onSecondaryContainer,
+      fontSize: 16,
+    ),
+  ),
 );
 
 var colorScheme = ColorScheme.fromSeed(

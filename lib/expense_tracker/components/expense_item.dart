@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_app/expense_tracker/models/Expense.dart';
+import 'package:second_app/shared/widgets/spacing.dart';
 
 class ExpenseItem extends StatelessWidget {
   final Expense expense;
@@ -11,8 +12,13 @@ class ExpenseItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(expense.title),
+            Text(
+              expense.title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            verticalSpace(6),
             Row(
               children: [
                 Text('₹ ${expense.amount.toStringAsFixed(2)}'),
