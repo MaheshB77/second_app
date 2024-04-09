@@ -4,13 +4,24 @@ import 'package:second_app/expense_tracker/models/Expense.dart';
 
 class ExpensesList extends StatelessWidget {
   final List<Expense> expenses;
-  const ExpensesList({super.key, required this.expenses});
+  final void Function(Expense expense) onDismissed;
+  const ExpensesList({
+    super.key,
+    required this.expenses,
+    required this.onDismissed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: expenses.length,
-      itemBuilder: (ctx, index) => ExpenseItem(expenses[index]),
+      itemBuilder: (ctx, index) => Dismissible(
+        key: ValueKey(expenses[index]),
+        child: ExpenseItem(expenses[index]),
+        onDismissed: (direction) {
+          onDismissed(expenses[index]);
+        },
+      ),
     );
   }
 }

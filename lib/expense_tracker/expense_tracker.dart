@@ -31,6 +31,12 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
     });
   }
 
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
   void _closeExpenseOverlay() {
     Navigator.pop(context);
   }
@@ -51,7 +57,10 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
         children: [
           const Text('The chart'),
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses),
+            child: ExpensesList(
+              expenses: _registeredExpenses,
+              onDismissed: _removeExpense,
+            ),
           ),
         ],
       ),
