@@ -17,8 +17,14 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(
+        closeExpenseOverlay: _closeExpenseOverlay,
+      ),
     );
+  }
+
+  void _closeExpenseOverlay() {
+    Navigator.pop(context);
   }
 
   @override
