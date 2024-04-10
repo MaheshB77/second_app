@@ -28,9 +28,15 @@ class Chart extends StatelessWidget {
     return maxTotalExpense;
   }
 
-  List<Widget> getIcons(BuildContext context) {
+  Color getIconColor(BuildContext context) {
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
+    return isDarkMode
+        ? Theme.of(context).colorScheme.secondary
+        : Theme.of(context).colorScheme.primary.withOpacity(0.7);
+  }
+
+  List<Widget> getIcons(BuildContext context) {
     return buckets
         .map(
           (bucket) => Expanded(
@@ -38,13 +44,23 @@ class Chart extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Icon(
                 categoryItem[bucket.category],
-                color: isDarkMode
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                color: getIconColor(context),
               ),
             ),
           ),
         )
+        .toList();
+  }
+
+  double getBarHeight(ExpenseBucket bucket) {
+    return bucket.totalExpenses == 0
+        ? 0
+        : bucket.totalExpenses / maxTotalExpense;
+  }
+
+  List<Widget> getChartBars() {
+    return buckets
+        .map((bucket) => ChartBar(fill: getBarHeight(bucket)))
         .toList();
   }
 
@@ -57,7 +73,7 @@ class Chart extends StatelessWidget {
         horizontal: 8,
       ),
       width: double.infinity,
-      height: 180,
+      height: 225,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         gradient: LinearGradient(
@@ -74,14 +90,7 @@ class Chart extends StatelessWidget {
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (final bucket in buckets) // alternative to map()
-                  ChartBar(
-                    fill: bucket.totalExpenses == 0
-                        ? 0
-                        : bucket.totalExpenses / maxTotalExpense,
-                  )
-              ],
+              children: getChartBars(),
             ),
           ),
           const SizedBox(height: 12),
