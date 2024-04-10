@@ -92,7 +92,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
       ),
       body: Column(
         children: [
-          Chart(expenses: expenses),
+          Chart(expenses: _registeredExpenses),
           Expanded(child: mainContent),
         ],
       ),
