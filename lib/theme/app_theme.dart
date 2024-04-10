@@ -30,10 +30,6 @@ var appTheme = ThemeData().copyWith(
 
 var appDarkTheme = ThemeData.dark().copyWith(
   colorScheme: darkColorTheme,
-  appBarTheme: const AppBarTheme().copyWith(
-    backgroundColor: darkColorTheme.onPrimaryContainer,
-    foregroundColor: darkColorTheme.primaryContainer,
-  ),
   cardTheme: const CardTheme().copyWith(
     color: darkColorTheme.secondaryContainer,
     margin: const EdgeInsets.symmetric(
@@ -45,21 +41,7 @@ var appDarkTheme = ThemeData.dark().copyWith(
     style: ElevatedButton.styleFrom(
       backgroundColor: darkColorTheme.primaryContainer,
     ),
-  ),
-  textTheme: GoogleFonts.robotoTextTheme().copyWith(
-    titleLarge: TextStyle(
-      fontWeight: FontWeight.bold,
-      color: darkColorTheme.onSecondaryContainer,
-      fontSize: 16,
-    ),
-  ),
-  iconTheme: IconThemeData().copyWith(
-    color: darkColorTheme.onSecondaryContainer,
-  ),
-  // TODO: Improve this
-  bottomSheetTheme: BottomSheetThemeData().copyWith(
-    backgroundColor: darkColorTheme.primaryContainer,
-  ), 
+  )
 );
 
 var lightColorScheme = ColorScheme.fromSeed(
@@ -67,5 +49,6 @@ var lightColorScheme = ColorScheme.fromSeed(
 );
 
 var darkColorTheme = ColorScheme.fromSeed(
-  seedColor: Color.fromARGB(255, 16, 56, 86),
+  brightness: Brightness.dark,
+  seedColor: const Color.fromARGB(255, 5, 99, 125),
 );
