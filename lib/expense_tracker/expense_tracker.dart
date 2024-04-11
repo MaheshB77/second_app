@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:second_app/expense_tracker/components/chart/chart.dart';
 import 'package:second_app/expense_tracker/components/expenses_list.dart';
 import 'package:second_app/expense_tracker/components/new_expense.dart';

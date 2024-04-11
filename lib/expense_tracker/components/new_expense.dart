@@ -92,75 +92,81 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            maxLength: 50,
-            controller: _titleController,
-            decoration: const InputDecoration(label: Text('Title')),
-          ),
-          Row(
+    double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardHeight + 16),
+          child: Column(
             children: [
-              Expanded(
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: _amountController,
-                  decoration: const InputDecoration(
-                    prefixText: '₹ ',
-                    label: Text('Amount'),
-                  ),
-                ),
+              TextField(
+                maxLength: 50,
+                controller: _titleController,
+                decoration: const InputDecoration(label: Text('Title')),
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'Select the date'
-                          : formatter.format(_selectedDate!),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _amountController,
+                      decoration: const InputDecoration(
+                        prefixText: '₹ ',
+                        label: Text('Amount'),
+                      ),
                     ),
-                    IconButton(
-                      onPressed: _openDatePicker,
-                      icon: const Icon(Icons.calendar_month_outlined),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          _selectedDate == null
+                              ? 'Select the date'
+                              : formatter.format(_selectedDate!),
+                        ),
+                        IconButton(
+                          onPressed: _openDatePicker,
+                          icon: const Icon(Icons.calendar_month_outlined),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  DropdownButton(
+                    value: _selectedCategory,
+                    items: Category.values
+                        .map(
+                          (category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category.name.toUpperCase()),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      _onCategoryChange(value);
+                    },
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: _addExpense,
+                    child: const Text('Save expense'),
+                  ),
+                  TextButton(
+                    onPressed: widget.closeExpenseOverlay,
+                    child: const Text('Cancel'),
+                  ),
+                ],
               )
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              DropdownButton(
-                value: _selectedCategory,
-                items: Category.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category.name.toUpperCase()),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  _onCategoryChange(value);
-                },
-              ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: _addExpense,
-                child: const Text('Save expense'),
-              ),
-              TextButton(
-                onPressed: widget.closeExpenseOverlay,
-                child: const Text('Cancel'),
-              ),
-            ],
-          )
-        ],
+        ),
       ),
     );
   }
