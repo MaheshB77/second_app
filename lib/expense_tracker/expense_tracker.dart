@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:second_app/expense_tracker/components/chart/chart.dart';
 import 'package:second_app/expense_tracker/components/expenses_list.dart';
 import 'package:second_app/expense_tracker/components/new_expense.dart';
@@ -67,8 +68,29 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
     Navigator.pop(context);
   }
 
+  Widget getMainContent(double width, Widget mainContent) {
+    if (width >= 600) {
+      return Row(
+        children: [
+          Expanded(
+            child: Chart(expenses: _registeredExpenses),
+          ),
+          Expanded(child: mainContent),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        Chart(expenses: _registeredExpenses),
+        Expanded(child: mainContent),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text('No expense found, please add some!'),
     );
@@ -90,12 +112,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(child: mainContent),
-        ],
-      ),
+      body: getMainContent(width, mainContent),
     );
   }
 }
