@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:second_app/expense_tracker/expense_tracker.dart';
-import 'package:second_app/theme/app_theme.dart';
+// import 'package:second_app/expense_tracker/expense_tracker.dart';
+import 'package:second_app/meals_app/screens/category_screen.dart';
+import 'package:second_app/meals_app/theme/meal_app_theme.dart';
+// import 'package:second_app/theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: appTheme,
-      darkTheme: appDarkTheme,
+      // theme: appTheme,
+      // darkTheme: appDarkTheme,
       // home: const DiceApp(),
       // home: const QuizApp(),
-      home: const ExpenseTracker(),
+      // home: const ExpenseTracker(),
+      theme: mealAppTheme,
+      home: const CategoryScreen(),
     );
   }
 }
