@@ -17,6 +17,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       context: context,
       isScrollControlled: true,
       builder: (ctx) => NewExpense(
@@ -38,7 +39,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
     });
   }
 
-  void _showSnakbar(int index, Expense expense) {
+  void _showSnackbar(int index, Expense expense) {
     // Clear already present snackbars
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -60,7 +61,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
     setState(() {
       _registeredExpenses.remove(expense);
     });
-    _showSnakbar(index, expense);
+    _showSnackbar(index, expense);
   }
 
   void _closeExpenseOverlay() {
