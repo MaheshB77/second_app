@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:second_app/meals_app/meals_app.dart';
 // import 'package:second_app/expense_tracker/expense_tracker.dart';
-import 'package:second_app/meals_app/screens/category_screen.dart';
 import 'package:second_app/meals_app/theme/meal_app_theme.dart';
 // import 'package:second_app/theme/app_theme.dart';
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       // home: const QuizApp(),
       // home: const ExpenseTracker(),
       theme: mealAppTheme,
-      home: const CategoryScreen(),
+      home: const MealsApp(),
     );
   }
 }
