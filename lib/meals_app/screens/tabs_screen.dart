@@ -70,10 +70,10 @@ class _TabsScreenState extends State<TabsScreen> {
     }
   }
 
-  void _selectSideOption(String option) {
+  void _selectSideOption(String option) async {
     Navigator.of(context).pop();
     if (option == 'filters') {
-      Navigator.push(
+      var result = await Navigator.push<Map<Filter, bool>>(
         context,
         MaterialPageRoute(
           builder: (ctx) => const FiltersScreen(),

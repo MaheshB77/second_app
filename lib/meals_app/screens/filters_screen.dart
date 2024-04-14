@@ -39,33 +39,45 @@ class _FiltersScreenState extends State<FiltersScreen> {
       appBar: AppBar(
         title: const Text('Your filters'),
       ),
-      body: Column(
-        children: [
-          FilterTile(
-            value: _glutenFreeFilter,
-            title: 'Gluten-Free',
-            subtitle: 'Only include gluten-free meals',
-            onUpdateFilter: _updateFilter,
-          ),
-          FilterTile(
-            value: _lactoseFreeFilter,
-            title: 'Lactose-Free',
-            subtitle: 'Only include lactose-free meals',
-            onUpdateFilter: _updateFilter,
-          ),
-          FilterTile(
-            value: _vegetarianFilter,
-            title: 'Vegetarian',
-            subtitle: 'Only include vegetarian meals',
-            onUpdateFilter: _updateFilter,
-          ),
-          FilterTile(
-            value: _veganFilter,
-            title: 'Vegan',
-            subtitle: 'Only include vegan meals',
-            onUpdateFilter: _updateFilter,
-          ),
-        ],
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+          if (didPop) return;
+          Navigator.of(context).pop({
+            Filter.glutenFree: _glutenFreeFilter,
+            Filter.lactoseFree: _lactoseFreeFilter,
+            Filter.vegetarian: _vegetarianFilter,
+            Filter.vegan: _veganFilter,
+          });
+        },
+        child: Column(
+          children: [
+            FilterTile(
+              value: _glutenFreeFilter,
+              title: 'Gluten-Free',
+              subtitle: 'Only include gluten-free meals',
+              onUpdateFilter: _updateFilter,
+            ),
+            FilterTile(
+              value: _lactoseFreeFilter,
+              title: 'Lactose-Free',
+              subtitle: 'Only include lactose-free meals',
+              onUpdateFilter: _updateFilter,
+            ),
+            FilterTile(
+              value: _vegetarianFilter,
+              title: 'Vegetarian',
+              subtitle: 'Only include vegetarian meals',
+              onUpdateFilter: _updateFilter,
+            ),
+            FilterTile(
+              value: _veganFilter,
+              title: 'Vegan',
+              subtitle: 'Only include vegan meals',
+              onUpdateFilter: _updateFilter,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -108,4 +120,11 @@ class FilterTile extends StatelessWidget {
       activeColor: theme.colorScheme.tertiary,
     );
   }
+}
+
+enum Filter {
+  glutenFree,
+  lactoseFree,
+  vegetarian,
+  vegan,
 }
