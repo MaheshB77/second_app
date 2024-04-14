@@ -17,9 +17,9 @@ class MealItemTrait extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           description,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white)
         ),
-        const SizedBox(width: 16)
+        const SizedBox(width: 10)
       ],
     );
   }
