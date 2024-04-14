@@ -69,6 +69,13 @@ class _TabsScreenState extends State<TabsScreen> {
     }
   }
 
+  void _selectSideOption(String option) {
+    if (option == 'filters') {
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _selectScreen();
@@ -77,7 +84,9 @@ class _TabsScreenState extends State<TabsScreen> {
       appBar: AppBar(
         title: Text(_title),
       ),
-      drawer: const MainDrawer(),
+      drawer: MainDrawer(
+        onSelectSideOption: _selectSideOption,
+      ),
       body: _selectedScreen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectTab,
