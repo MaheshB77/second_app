@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:second_app/meals_app/data/dummy_data.dart';
 import 'package:second_app/meals_app/models/meal.dart';
 import 'package:second_app/meals_app/screens/category_screen.dart';
 import 'package:second_app/meals_app/screens/filters_screen.dart';
 import 'package:second_app/meals_app/screens/meals_screen.dart';
 import 'package:second_app/meals_app/widgets/main_drawer.dart';
+
+Map<Filter, bool> kInitialFilters = {
+  Filter.glutenFree: false,
+  Filter.lactoseFree: false,
+  Filter.vegetarian: false,
+  Filter.vegan: false,
+};
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -17,11 +25,13 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget? _selectedScreen;
   String _title = 'Pick your category';
   final List<Meal> _favoriteMeals = [];
+  Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   @override
   void initState() {
     _selectedScreen = CategoryScreen(
       onToggleFavorite: _toggleFavoriteMeal,
+      availableMeals: _getAvailableMeals(),
     );
     super.initState();
   }
@@ -65,9 +75,28 @@ class _TabsScreenState extends State<TabsScreen> {
     } else {
       _selectedScreen = CategoryScreen(
         onToggleFavorite: _toggleFavoriteMeal,
+        availableMeals: _getAvailableMeals(),
       );
       _title = 'Pick your category';
     }
+  }
+
+  List<Meal> _getAvailableMeals() {
+    return dummyMeals.where((meal) {
+      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
+        return false;
+      }
+      return true;
+    }).toList();
   }
 
   void _selectSideOption(String option) async {
@@ -76,9 +105,12 @@ class _TabsScreenState extends State<TabsScreen> {
       var result = await Navigator.push<Map<Filter, bool>>(
         context,
         MaterialPageRoute(
-          builder: (ctx) => const FiltersScreen(),
+          builder: (ctx) => FiltersScreen(
+            filters: _selectedFilters,
+          ),
         ),
       );
+      _selectedFilters = result ?? kInitialFilters;
     }
   }
 
