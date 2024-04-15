@@ -66,6 +66,7 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   void _selectScreen() {
+    print('Selecting the screen :: ${_getAvailableMeals().length}');
     if (_selectedTabIndex == 1) {
       _title = 'Favorite Meals';
       _selectedScreen = MealsScreen(
@@ -110,7 +111,9 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ),
       );
-      _selectedFilters = result ?? kInitialFilters;
+      setState(() {
+        _selectedFilters = result ?? kInitialFilters;
+      });
     }
   }
 
