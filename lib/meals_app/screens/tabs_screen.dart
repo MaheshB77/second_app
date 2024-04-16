@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:second_app/meals_app/data/dummy_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:second_app/meals_app/models/meal.dart';
+import 'package:second_app/meals_app/providers/meals_provider.dart';
 import 'package:second_app/meals_app/screens/category_screen.dart';
 import 'package:second_app/meals_app/screens/filters_screen.dart';
 import 'package:second_app/meals_app/screens/meals_screen.dart';
@@ -13,28 +14,19 @@ Map<Filter, bool> kInitialFilters = {
   Filter.vegan: false,
 };
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedTabIndex = 0;
   Widget? _selectedScreen;
   String _title = 'Pick your category';
   final List<Meal> _favoriteMeals = [];
   Map<Filter, bool> _selectedFilters = kInitialFilters;
-
-  @override
-  void initState() {
-    _selectedScreen = CategoryScreen(
-      onToggleFavorite: _toggleFavoriteMeal,
-      availableMeals: _getAvailableMeals(),
-    );
-    super.initState();
-  }
 
   void _selectTab(int index) {
     setState(() {
@@ -66,7 +58,6 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   void _selectScreen() {
-    print('Selecting the screen :: ${_getAvailableMeals().length}');
     if (_selectedTabIndex == 1) {
       _title = 'Favorite Meals';
       _selectedScreen = MealsScreen(
@@ -83,7 +74,8 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   List<Meal> _getAvailableMeals() {
-    return dummyMeals.where((meal) {
+    final meals = ref.watch(mealsProvider);
+    return meals.where((meal) {
       if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
       }
