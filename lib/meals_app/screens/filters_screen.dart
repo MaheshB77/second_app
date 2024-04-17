@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:second_app/meals_app/providers/filter_provider.dart';
 
-class FiltersScreen extends StatefulWidget {
-  final Map<Filter, bool> filters;
-  const FiltersScreen({
-    super.key,
-    required this.filters,
-  });
+class FiltersScreen extends ConsumerStatefulWidget {
+  const FiltersScreen({super.key});
 
   @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
+  ConsumerState<FiltersScreen> createState() => _FiltersScreenState();
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   bool _glutenFreeFilter = false;
   bool _lactoseFreeFilter = false;
   bool _vegetarianFilter = false;
@@ -20,10 +18,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
   @override
   void initState() {
     super.initState();
-    _glutenFreeFilter = widget.filters[Filter.glutenFree]!;
-    _lactoseFreeFilter = widget.filters[Filter.lactoseFree]!;
-    _vegetarianFilter = widget.filters[Filter.vegetarian]!;
-    _veganFilter = widget.filters[Filter.vegan]!;
+    final filters = ref.read(filtersProvider);
+    _glutenFreeFilter = filters[Filter.glutenFree]!;
+    _lactoseFreeFilter = filters[Filter.lactoseFree]!;
+    _vegetarianFilter = filters[Filter.vegetarian]!;
+    _veganFilter = filters[Filter.vegan]!;
   }
 
   void _updateFilter(bool isActive, String filter) {
@@ -53,10 +52,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
         title: const Text('Your filters'),
       ),
       body: PopScope(
-        canPop: false,
+        canPop: true,
         onPopInvoked: (bool didPop) {
-          if (didPop) return;
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).updateFilters({
             Filter.glutenFree: _glutenFreeFilter,
             Filter.lactoseFree: _lactoseFreeFilter,
             Filter.vegetarian: _vegetarianFilter,
@@ -133,11 +131,4 @@ class FilterTile extends StatelessWidget {
       activeColor: theme.colorScheme.tertiary,
     );
   }
-}
-
-enum Filter {
-  glutenFree,
-  lactoseFree,
-  vegetarian,
-  vegan,
 }
