@@ -29,16 +29,17 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   void _selectScreen() {
     final favoriteMeals = ref.watch(favoriteMealProvider);
+    final filteredMeals = _getFilteredMeals();
     if (_selectedTabIndex == 1) {
       _title = 'Favorite Meals';
       _selectedScreen = MealsScreen(meals: favoriteMeals);
     } else {
-      _selectedScreen = CategoryScreen(availableMeals: _getAvailableMeals());
+      _selectedScreen = CategoryScreen(availableMeals: filteredMeals);
       _title = 'Pick your category';
     }
   }
 
-  List<Meal> _getAvailableMeals() {
+  List<Meal> _getFilteredMeals() {
     final meals = ref.watch(mealsProvider);
     final filters = ref.watch(filtersProvider);
     return meals.where((meal) {
