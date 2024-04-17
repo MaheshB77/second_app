@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:second_app/meals_app/models/meal.dart';
 import 'package:second_app/meals_app/providers/favorite_provider.dart';
 import 'package:second_app/meals_app/providers/filter_provider.dart';
-import 'package:second_app/meals_app/providers/meals_provider.dart';
 import 'package:second_app/meals_app/screens/category_screen.dart';
 import 'package:second_app/meals_app/screens/filters_screen.dart';
 import 'package:second_app/meals_app/screens/meals_screen.dart';
@@ -29,7 +27,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   void _selectScreen() {
     final favoriteMeals = ref.watch(favoriteMealProvider);
-    final filteredMeals = _getFilteredMeals();
+    final filteredMeals = ref.watch(filteredMealsProvider);
     if (_selectedTabIndex == 1) {
       _title = 'Favorite Meals';
       _selectedScreen = MealsScreen(meals: favoriteMeals);
@@ -37,26 +35,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       _selectedScreen = CategoryScreen(availableMeals: filteredMeals);
       _title = 'Pick your category';
     }
-  }
-
-  List<Meal> _getFilteredMeals() {
-    final meals = ref.watch(mealsProvider);
-    final filters = ref.watch(filtersProvider);
-    return meals.where((meal) {
-      if (filters[Filter.glutenFree]! && !meal.isGlutenFree) {
-        return false;
-      }
-      if (filters[Filter.lactoseFree]! && !meal.isLactoseFree) {
-        return false;
-      }
-      if (filters[Filter.vegetarian]! && !meal.isVegetarian) {
-        return false;
-      }
-      if (filters[Filter.vegan]! && !meal.isVegan) {
-        return false;
-      }
-      return true;
-    }).toList();
   }
 
   void _selectSideOption(String option) {
