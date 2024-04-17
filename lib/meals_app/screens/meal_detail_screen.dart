@@ -23,6 +23,10 @@ class MealDetailsScreen extends ConsumerWidget {
     );
   }
 
+  bool _isFavorite(WidgetRef ref) {
+    return ref.watch(favoriteMealProvider).contains(meal);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -33,7 +37,9 @@ class MealDetailsScreen extends ConsumerWidget {
             onPressed: () {
               _toggleFavorite(context, ref);
             },
-            icon: const Icon(Icons.star),
+            icon: _isFavorite(ref)
+                ? const Icon(Icons.star)
+                : const Icon(Icons.star_border),
           )
         ],
       ),
