@@ -37,9 +37,22 @@ class MealDetailsScreen extends ConsumerWidget {
             onPressed: () {
               _toggleFavorite(context, ref);
             },
-            icon: _isFavorite(ref)
-                ? const Icon(Icons.star)
-                : const Icon(Icons.star_border),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.elasticInOut,
+                  ),
+                  child: child,
+                );
+              },
+              child: Icon(
+                _isFavorite(ref) ? Icons.star : Icons.star_border,
+                key: ValueKey(_isFavorite(ref)),
+              ),
+            ),
           )
         ],
       ),
