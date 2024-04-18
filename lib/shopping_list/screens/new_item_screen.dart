@@ -9,6 +9,36 @@ class NewItemScreen extends StatefulWidget {
 }
 
 class _NewItemScreenState extends State<NewItemScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? _nameValidator(String? value) {
+    if (value == null ||
+        value.isEmpty ||
+        value.trim().length <= 1 ||
+        value.trim().length > 50) {
+      return 'Name should be between 1 to 50 characters';
+    }
+    return null;
+  }
+
+  String? _quantityValidator(String? value) {
+    if (value == null ||
+        value.isEmpty ||
+        int.tryParse(value) == null ||
+        int.tryParse(value)! <= 0) {
+      return 'Must be valid, and positive number';
+    }
+    return null;
+  }
+
+  void _addItem() {
+    _formKey.currentState!.validate();
+  }
+
+  void _clearForm() {
+    _formKey.currentState!.reset();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +48,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
@@ -25,9 +56,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
                 decoration: const InputDecoration(
                   label: Text('Name'),
                 ),
-                validator: (value) {
-                  return 'Demo msg';
-                },
+                validator: _nameValidator,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -39,9 +68,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
                       ),
                       initialValue: '1',
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        return 'Demo msg';
-                      },
+                      validator: _quantityValidator,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -67,6 +94,20 @@ class _NewItemScreenState extends State<NewItemScreen> {
                       onChanged: (value) {},
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: _clearForm,
+                    child: const Text('Clear'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _addItem,
+                    child: const Text('Add Item'),
+                  )
                 ],
               )
             ],
