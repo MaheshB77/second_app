@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_app/shopping_list/data/categories.dart';
+import 'package:second_app/shopping_list/models/category.dart';
 
 class NewItemScreen extends StatefulWidget {
   const NewItemScreen({super.key});
@@ -10,6 +11,9 @@ class NewItemScreen extends StatefulWidget {
 
 class _NewItemScreenState extends State<NewItemScreen> {
   final _formKey = GlobalKey<FormState>();
+  var _enteredName = '';
+  var _enteredQuantity = 1;
+  var _selectedCategory = categories[Categories.vegetables];
 
   String? _nameValidator(String? value) {
     if (value == null ||
@@ -32,7 +36,9 @@ class _NewItemScreenState extends State<NewItemScreen> {
   }
 
   void _addItem() {
-    _formKey.currentState!.validate();
+    if(_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+    }
   }
 
   void _clearForm() {
@@ -57,6 +63,9 @@ class _NewItemScreenState extends State<NewItemScreen> {
                   label: Text('Name'),
                 ),
                 validator: _nameValidator,
+                onSaved: (value) {
+                  _enteredName = value!;
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -69,11 +78,15 @@ class _NewItemScreenState extends State<NewItemScreen> {
                       initialValue: '1',
                       keyboardType: TextInputType.number,
                       validator: _quantityValidator,
+                      onSaved: (value) {
+                        _enteredQuantity = int.parse(value!);
+                      },
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: DropdownButtonFormField(
+                      value: _selectedCategory,
                       items: [
                         for (final category in categories.entries)
                           DropdownMenuItem(
@@ -91,7 +104,11 @@ class _NewItemScreenState extends State<NewItemScreen> {
                             ),
                           ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedCategory = value;
+                        });
+                      },
                     ),
                   ),
                 ],
