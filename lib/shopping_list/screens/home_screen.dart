@@ -16,21 +16,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<GroceryItem> groceryItems = [];
 
-  void _addItem() async {
-    final newItem = await Navigator.push<GroceryItem>(
+  void _addItem() {
+    Navigator.push<GroceryItem>(
       context,
       MaterialPageRoute(
         builder: (ctx) => const NewItemScreen(),
       ),
     );
-
-    if (newItem == null) {
-      return;
-    }
-
-    setState(() {
-      groceryItems.add(newItem);
-    });
   }
 
   void _logOut() async {
