@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:second_app/shopping_list/data/categories.dart';
 import 'package:second_app/shopping_list/models/category.dart';
 import 'package:second_app/shopping_list/models/grocery_item.dart';
+import 'package:second_app/shopping_list/services/category_service.dart';
 
-class NewItemScreen extends StatefulWidget {
+class NewItemScreen extends ConsumerStatefulWidget {
   const NewItemScreen({super.key});
 
   @override
-  State<NewItemScreen> createState() => _NewItemScreenState();
+  ConsumerState<NewItemScreen> createState() => _NewItemScreenState();
 }
 
-class _NewItemScreenState extends State<NewItemScreen> {
+class _NewItemScreenState extends ConsumerState<NewItemScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   var _enteredQuantity = 1;
@@ -36,15 +38,20 @@ class _NewItemScreenState extends State<NewItemScreen> {
     return null;
   }
 
-  void _addItem() {
+  void _addItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      Navigator.of(context).pop(GroceryItem(
-        id: DateTime.now().toString(),
-        name: _enteredName,
-        quantity: _enteredQuantity,
-        category: _selectedCategory!,
-      ));
+      CategoryService().saveGroceryItem(
+        GroceryItem(
+          id: DateTime.now().toString(),
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _selectedCategory!,
+        ),
+        ref,
+      );
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
     }
   }
 
