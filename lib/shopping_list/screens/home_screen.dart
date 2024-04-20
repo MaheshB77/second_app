@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:second_app/shopping_list/models/grocery_item.dart';
+import 'package:second_app/shopping_list/providers/auth_provider.dart';
 import 'package:second_app/shopping_list/screens/new_item_screen.dart';
 import 'package:second_app/shopping_list/widgets/grocery_list.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final List<GroceryItem> groceryItems = [];
   void _addItem() async {
     final newItem = await Navigator.push<GroceryItem>(
@@ -29,6 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _logOut() async {
+    ref.watch(authProvider.notifier).signOut();
+    if (!context.mounted) return;
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: _addItem,
             icon: const Icon(Icons.add),
-          )
+          ),
+          IconButton(
+            onPressed: _logOut,
+            icon: const Icon(Icons.logout),
+          ),
         ],
       ),
       body: GroceryList(groceryItems),
