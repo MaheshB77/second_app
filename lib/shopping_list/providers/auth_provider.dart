@@ -37,6 +37,7 @@ class AuthNotifier extends StateNotifier<User?> {
     if (idToken == null) {
       throw 'No ID Token found.';
     }
+    print("Logging in!!!!!!!");
     final res = await Supabase.instance.client.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
@@ -47,6 +48,7 @@ class AuthNotifier extends StateNotifier<User?> {
   }
 
   void signOut() async {
+    print("Logging out!!!!!!!");
     await Supabase.instance.client.auth.signOut();
     state = null; // Clear the user state
   }

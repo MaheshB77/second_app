@@ -14,9 +14,10 @@ class NewItemScreen extends ConsumerStatefulWidget {
 
 class _NewItemScreenState extends ConsumerState<NewItemScreen> {
   final _formKey = GlobalKey<FormState>();
-  var _enteredName = '';
-  var _enteredQuantity = 1;
-  var _selectedCategory = categories[Categories.vegetables];
+  String _enteredName = '';
+  int _enteredQuantity = 1;
+  Category? _selectedCategory = categories[Categories.vegetables];
+  bool _isSending = false;
 
   String? _nameValidator(String? value) {
     if (value == null ||
@@ -41,18 +42,35 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
   void _addItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      CategoryService().saveGroceryItem(
-        GroceryItem(
-          id: DateTime.now().toString(),
-          name: _enteredName,
-          quantity: _enteredQuantity,
-          category: _selectedCategory!,
-        ),
-        ref,
-      );
-      if (!context.mounted) return;
-      Navigator.of(context).pop();
+      _toggleSending();
+      try {
+        await CategoryService().saveGroceryItem(
+          GroceryItem(
+            id: DateTime.now().toString(),
+            name: _enteredName,
+            quantity: _enteredQuantity,
+            category: _selectedCategory!,
+          ),
+          ref,
+        );
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      } catch (e) {
+        _toggleSending();
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Something went wrong!')),
+          );
+        }
+      }
     }
+  }
+
+  void _toggleSending() {
+    setState(() {
+      _isSending = !_isSending;
+    });
   }
 
   void _clearForm() {
@@ -132,12 +150,18 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: _clearForm,
+                    onPressed: _isSending ? null : _clearForm,
                     child: const Text('Clear'),
                   ),
                   ElevatedButton(
-                    onPressed: _addItem,
-                    child: const Text('Add Item'),
+                    onPressed: _isSending ? null : _addItem,
+                    child: _isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Add Item'),
                   )
                 ],
               )

@@ -14,15 +14,42 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  List<GroceryItem> groceryItems = [];
+  List<GroceryItem> _groceryItems = [];
+  bool _isLoading = true;
 
-  void _addItem() {
-    Navigator.push<GroceryItem>(
+  @override
+  void initState() {
+    super.initState();
+    _getGroceries();
+  }
+
+  void _addItem() async {
+    await Navigator.push<GroceryItem>(
       context,
       MaterialPageRoute(
         builder: (ctx) => const NewItemScreen(),
       ),
     );
+    _getGroceries();
+  }
+
+  void _deleteGroceryItem(GroceryItem groceryItem) async {
+    final index = _groceryItems.indexOf(groceryItem);
+    try {
+      setState(() {
+        _groceryItems.removeAt(index);
+      });
+      await CategoryService().deleteGroceryItem(groceryItem);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Something went wrong!')),
+        );
+        setState(() {
+          _groceryItems.insert(index, groceryItem); // Undo from UI
+        });
+      }
+    }
   }
 
   void _logOut() async {
@@ -32,15 +59,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _getGroceries() async {
+    setState(() {
+      _isLoading = true;
+    });
     final result = await CategoryService().getGroceries();
     setState(() {
-      groceryItems = result;
+      _groceryItems = [...result];
+      _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _getGroceries();
+    final content = _isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : GroceryList(
+            _groceryItems,
+            deleteGroceryItem: _deleteGroceryItem,
+          );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your groceries'),
@@ -55,7 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: GroceryList(groceryItems),
+      body: content,
     );
   }
 }
