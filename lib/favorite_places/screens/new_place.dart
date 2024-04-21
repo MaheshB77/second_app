@@ -3,10 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:second_app/favorite_places/models/favorite_place.dart';
 import 'package:second_app/favorite_places/providers/favorite_place_provider.dart';
 
-class NewPlace extends ConsumerWidget {
+class NewPlace extends ConsumerStatefulWidget {
+  const NewPlace({super.key});
+
+  @override
+  ConsumerState<NewPlace> createState() => _NewPlaceState();
+}
+
+class _NewPlaceState extends ConsumerState<NewPlace> {
   final _formKey = GlobalKey<FormState>();
   String _enteredTitle = '';
-  NewPlace({super.key});
 
   String? _nameValidator(String? value) {
     if (value == null ||
@@ -18,19 +24,21 @@ class NewPlace extends ConsumerWidget {
     return null;
   }
 
-  void _addNewPlace(BuildContext context, WidgetRef ref) {
+  void _addNewPlace(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      ref.read(favoritePlaceProvider.notifier).addFavoritePlace(FavoritePlace(
-            id: DateTime.now().toString(),
-            title: _enteredTitle,
-          ));
+      ref.read(favoritePlaceProvider.notifier).addFavoritePlace(
+            FavoritePlace(
+              id: DateTime.now().toString(),
+              title: _enteredTitle,
+            ),
+          );
       Navigator.pop(context);
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add new place'),
@@ -43,9 +51,9 @@ class NewPlace extends ConsumerWidget {
             children: [
               TextFormField(
                 maxLength: 50,
-                decoration: const InputDecoration(
-                  label: Text('Title'),
-                  focusColor: Colors.white
+                decoration: const InputDecoration(labelText: 'Title'),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
                 validator: _nameValidator,
                 onSaved: (value) {
@@ -54,7 +62,7 @@ class NewPlace extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  _addNewPlace(context, ref);
+                  _addNewPlace(context);
                 },
                 child: const Text('Add Place'),
               )
