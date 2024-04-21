@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // import 'package:second_app/theme/app_theme.dart';
 // import 'package:second_app/expense_tracker/expense_tracker.dart';
@@ -8,11 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:second_app/meals_app/meals_app.dart';
 // import 'package:second_app/meals_app/theme/meal_app_theme.dart';
 
-import 'package:second_app/shopping_list/theme/shopping_list_app_theme.dart';
-import 'package:second_app/shopping_list/shopping_list_app.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:second_app/shopping_list/theme/shopping_list_app_theme.dart';
+// import 'package:second_app/shopping_list/shopping_list_app.dart';
 
-final supabaseClient = Supabase.instance.client;
+import 'package:second_app/favorite_places/favorite_places_app.dart';
+import 'package:second_app/favorite_places/theme/favorite_places_app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +45,11 @@ class MyApp extends StatelessWidget {
       // theme: mealAppTheme,
       // home: const MealsApp(),
 
-      theme: shoppingListAppTheme,
-      home: const ShoppingListApp(),
+      // theme: shoppingListAppTheme,
+      // home: const ShoppingListApp(),
+
+      theme: favoritePlacesAppTheme,
+      home: const FavoritePlacesApp(),
     );
   }
 }
