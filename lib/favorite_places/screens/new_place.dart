@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:second_app/favorite_places/models/favorite_place.dart';
 import 'package:second_app/favorite_places/providers/favorite_place_provider.dart';
 import 'package:second_app/favorite_places/widgets/image_input.dart';
+import 'package:second_app/favorite_places/widgets/location_input.dart';
 
 class NewPlace extends ConsumerStatefulWidget {
   const NewPlace({super.key});
@@ -33,17 +34,12 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
       _formKey.currentState!.save();
       ref.read(favoritePlaceProvider.notifier).addFavoritePlace(
             FavoritePlace(
-              id: DateTime.now().toString(),
-              title: _enteredTitle,
-              image: _imageFile!
-            ),
+                id: DateTime.now().toString(),
+                title: _enteredTitle,
+                image: _imageFile!),
           );
       Navigator.pop(context);
     }
-  }
-
-  void _addImage(File imageFile) {
-    _imageFile = imageFile;
   }
 
   @override
@@ -70,7 +66,13 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                 },
               ),
               const SizedBox(height: 10),
-              ImageInput(addImage: _addImage),
+              ImageInput(
+                addImage: (imageFile) {
+                  _imageFile = imageFile;
+                },
+              ),
+              const SizedBox(height: 16),
+              const LocationInput(),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
