@@ -12,13 +12,15 @@ class PlaceDetails extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Place details'),
       ),
-      body: Center(
-        child: Text(
-          favoritePlace.title,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: Theme.of(context).colorScheme.onPrimaryContainer
+      body: Stack(
+        children: [
+          Image.file(
+            favoritePlace.image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
-        ),
+        ],
       ),
     );
   }

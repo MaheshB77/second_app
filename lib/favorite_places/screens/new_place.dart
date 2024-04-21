@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:second_app/favorite_places/models/favorite_place.dart';
 import 'package:second_app/favorite_places/providers/favorite_place_provider.dart';
+import 'package:second_app/favorite_places/widgets/image_input.dart';
 
 class NewPlace extends ConsumerStatefulWidget {
   const NewPlace({super.key});
@@ -13,6 +16,7 @@ class NewPlace extends ConsumerStatefulWidget {
 class _NewPlaceState extends ConsumerState<NewPlace> {
   final _formKey = GlobalKey<FormState>();
   String _enteredTitle = '';
+  File? _imageFile;
 
   String? _nameValidator(String? value) {
     if (value == null ||
@@ -25,16 +29,21 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
   }
 
   void _addNewPlace(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && _imageFile != null) {
       _formKey.currentState!.save();
       ref.read(favoritePlaceProvider.notifier).addFavoritePlace(
             FavoritePlace(
               id: DateTime.now().toString(),
               title: _enteredTitle,
+              image: _imageFile!
             ),
           );
       Navigator.pop(context);
     }
+  }
+
+  void _addImage(File imageFile) {
+    _imageFile = imageFile;
   }
 
   @override
@@ -60,6 +69,9 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
                   _enteredTitle = value!;
                 },
               ),
+              const SizedBox(height: 10),
+              ImageInput(addImage: _addImage),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   _addNewPlace(context);

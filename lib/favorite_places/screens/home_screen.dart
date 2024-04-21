@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +31,15 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final places = ref.watch(favoritePlaceProvider);
-    var fallBack = const Center(child: Text('No places added yet!'));
+    var fallBack = Center(
+      child: Text(
+        'No places added yet!',
+        style: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(color: Theme.of(context).colorScheme.onBackground),
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -46,20 +55,27 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: places.isEmpty
           ? fallBack
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: places.length,
-                    itemBuilder: (ctx, index) => ListTile(
-                      title: Text(places[index].title),
-                      onTap: () {
-                        _goToDetails(context, places[index]);
-                      },
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: places.length,
+                      itemBuilder: (ctx, index) => ListTile(
+                        leading: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: FileImage(places[index].image),
+                        ),
+                        title: Text(places[index].title),
+                        onTap: () {
+                          _goToDetails(context, places[index]);
+                        },
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
     );
   }
