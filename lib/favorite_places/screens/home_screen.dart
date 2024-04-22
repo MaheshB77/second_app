@@ -7,14 +7,27 @@ import 'package:second_app/favorite_places/providers/favorite_place_provider.dar
 import 'package:second_app/favorite_places/screens/new_place.dart';
 import 'package:second_app/favorite_places/screens/place_details.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(favoritePlaceProvider.notifier).loadPlaces();
+  }
 
   void _onAddNew(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (ctx) => NewPlace(),
+        builder: (ctx) => const NewPlace(),
       ),
     );
   }
@@ -29,7 +42,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final places = ref.watch(favoritePlaceProvider);
     var fallBack = Center(
       child: Text(
@@ -60,21 +73,32 @@ class HomeScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: places.length,
-                      itemBuilder: (ctx, index) => ListTile(
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: FileImage(places[index].image),
-                        ),
-                        title: Text(places[index].title),
-                        subtitle: Text(places[index].location),
-                        onTap: () {
-                          _goToDetails(context, places[index]);
-                        },
-                      ),
+                    child: FutureBuilder(
+                      future: _placesFuture,
+                      builder: (ctx, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: places.length,
+                          itemBuilder: (ctx, index) => ListTile(
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundImage: FileImage(places[index].image),
+                            ),
+                            title: Text(places[index].title),
+                            subtitle: Text(places[index].location),
+                            onTap: () {
+                              _goToDetails(context, places[index]);
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
