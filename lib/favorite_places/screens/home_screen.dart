@@ -64,10 +64,11 @@ class HomeScreen extends ConsumerWidget {
                       itemCount: places.length,
                       itemBuilder: (ctx, index) => ListTile(
                         leading: CircleAvatar(
-                          radius: 50,
+                          radius: 25,
                           backgroundImage: FileImage(places[index].image),
                         ),
                         title: Text(places[index].title),
+                        subtitle: Text(places[index].location),
                         onTap: () {
                           _goToDetails(context, places[index]);
                         },

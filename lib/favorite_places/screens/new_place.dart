@@ -18,6 +18,7 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
   final _formKey = GlobalKey<FormState>();
   String _enteredTitle = '';
   File? _imageFile;
+  String? _location;
 
   String? _nameValidator(String? value) {
     if (value == null ||
@@ -30,13 +31,17 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
   }
 
   void _addNewPlace(BuildContext context) {
-    if (_formKey.currentState!.validate() && _imageFile != null) {
+    if (_formKey.currentState!.validate() &&
+        _imageFile != null &&
+        _location != null) {
       _formKey.currentState!.save();
       ref.read(favoritePlaceProvider.notifier).addFavoritePlace(
             FavoritePlace(
-                id: DateTime.now().toString(),
-                title: _enteredTitle,
-                image: _imageFile!),
+              id: DateTime.now().toString(),
+              title: _enteredTitle,
+              image: _imageFile!,
+              location: _location!,
+            ),
           );
       Navigator.pop(context);
     }
@@ -52,35 +57,41 @@ class _NewPlaceState extends ConsumerState<NewPlace> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              TextFormField(
-                maxLength: 50,
-                decoration: const InputDecoration(labelText: 'Title'),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onBackground,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  maxLength: 50,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  validator: _nameValidator,
+                  onSaved: (value) {
+                    _enteredTitle = value!;
+                  },
                 ),
-                validator: _nameValidator,
-                onSaved: (value) {
-                  _enteredTitle = value!;
-                },
-              ),
-              const SizedBox(height: 10),
-              ImageInput(
-                addImage: (imageFile) {
-                  _imageFile = imageFile;
-                },
-              ),
-              const SizedBox(height: 16),
-              const LocationInput(),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  _addNewPlace(context);
-                },
-                child: const Text('Add Place'),
-              )
-            ],
+                const SizedBox(height: 10),
+                ImageInput(
+                  addImage: (imageFile) {
+                    _imageFile = imageFile;
+                  },
+                ),
+                const SizedBox(height: 16),
+                LocationInput(
+                  setLocation: (location) {
+                    _location = location;
+                  },
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    _addNewPlace(context);
+                  },
+                  child: const Text('Add Place'),
+                )
+              ],
+            ),
           ),
         ),
       ),

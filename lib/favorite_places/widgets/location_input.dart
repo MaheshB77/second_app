@@ -3,15 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends ConsumerStatefulWidget {
-  const LocationInput({super.key});
+  final void Function(String location) setLocation;
+  const LocationInput({super.key, required this.setLocation});
 
   @override
   ConsumerState<LocationInput> createState() => _LocationInputState();
 }
 
 class _LocationInputState extends ConsumerState<LocationInput> {
-  Location? _chosenLocation;
   bool _isGettingLocation = false;
+  String? _location;
 
   void _getLocation() async {
     Location location = Location();
@@ -38,20 +39,22 @@ class _LocationInputState extends ConsumerState<LocationInput> {
     setState(() {
       _isGettingLocation = true;
     });
-
+    
     locationData = await location.getLocation();
-    print('locationData.latitude :: ${locationData.latitude}');
-    print('locationData.longitude :: ${locationData.longitude}');
 
     setState(() {
       _isGettingLocation = false;
+      _location =
+          'Latitude : ${locationData.latitude}, Longitude : ${locationData.longitude}';
     });
+    widget.setLocation(_location!);
   }
 
   @override
   Widget build(BuildContext context) {
+    String locationDetails = _location ?? 'No location chosen';
     Widget previewContent = Text(
-      'No location chosen',
+      locationDetails,
       textAlign: TextAlign.center,
       style: Theme.of(context)
           .textTheme
